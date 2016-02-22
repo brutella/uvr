@@ -15,7 +15,7 @@ const (
 	TPDOAnalogVariables13_16 canopen.FunctionCode = 0x380
 	TPDOAnalogVariables29_32 canopen.FunctionCode = 0x3C0
 
-	MPDOClientServerAddressing canopen.FunctionCode = 0x400
+	MPDOClientServerConnManagement canopen.FunctionCode = 0x400
 	MPDOLogging                canopen.FunctionCode = 0x480
 	MPDOUnits                  canopen.FunctionCode = 0x480
 
@@ -23,13 +23,4 @@ const (
 	SSDOServerToClient2 canopen.FunctionCode = 0x5C0
 	SSDOClientToServer1 canopen.FunctionCode = 0x600
 	SSDOClientToServer2 canopen.FunctionCode = 0x640
-)
-
-const (
-	User                    = 0x2000
-	Time                    = 0x2010
-	Inlet                   = 0x2080
-	SolarControl            = 0x3280
-	SolarControlOnTempDiff  = 0x3281
-	SolarControlOffTempDiff = 0x3282
 )
