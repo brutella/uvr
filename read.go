@@ -8,13 +8,13 @@ import (
 	"time"
 )
 
-func ReadFromIndex(idx canopen.ObjectIndex, nodeID canopen.NodeID, bus *can.Bus) (interface{}, error) {
+func ReadFromIndex(idx canopen.ObjectIndex, nodeID uint8, bus *can.Bus) (interface{}, error) {
 	upload := sdo.Upload{
 		ObjectIndex:   idx,
 		RequestCobID:  uint16(SSDOClientToServer2) + uint16(nodeID),
 		ResponseCobID: uint16(SSDOServerToClient2) + uint16(nodeID),
 	}
-    
+
 	b, err := upload.Do(bus)
 
 	if err != nil {
@@ -32,7 +32,7 @@ func ReadFromIndex(idx canopen.ObjectIndex, nodeID canopen.NodeID, bus *can.Bus)
 	case 0x10: // String reference
 		index := parseStringIndex(b)
 		return ReadStringAtIndex(index, nodeID, bus)
-        
+
 	case 0x20: // Bit field
 		str := "Bits "
 		n := int(b[6] & 0xF)
@@ -42,36 +42,27 @@ func ReadFromIndex(idx canopen.ObjectIndex, nodeID canopen.NodeID, bus *can.Bus)
 		}
 
 		return str, nil
-        
+
 	case 0x30:
 		return parseCharacter(b)
-        
+
 	case 0x40: // documentation says integer but actually it's a 16-bit float
-        
-        // Override bytes for 16-bit float
-        b[2] = 0
-        b[3] = 0
-		value := parseFloat32(b)
-        return value, nil
-                //
-        // index := parseUnitIndex(b)
-        // str, err := ReadStringAtIndex(index, nodeID, bus)
-        // if err != nil {
-        //     return nil, err
-        // }
-        // return fmt.Sprintf("value %f %s", value, str), nil
-        
+
+		// Override bytes for 16-bit float
+		b[2] = 0
+		b[3] = 0
+		fallthrough
 	case 0x50: // documentation says long integer but actually it's a 32-bit float
 		value := parseFloat32(b)
-        return value, nil
-        
-        // index := parseUnitIndex(b)
-        // str, err := ReadStringAtIndex(index, nodeID, bus)
-        // if err != nil {
-        //     return nil, err
-        // }
-        // return fmt.Sprintf("value %f %s", value, str), nil
-        
+		return value, nil
+
+		// index := parseUnitIndex(b)
+		// str, err := ReadStringAtIndex(index, nodeID, bus)
+		// if err != nil {
+		//     return nil, err
+		// }
+		// return fmt.Sprintf("value %f %s", value, str), nil
+
 	default:
 		break
 	}
@@ -79,7 +70,7 @@ func ReadFromIndex(idx canopen.ObjectIndex, nodeID canopen.NodeID, bus *can.Bus)
 	return nil, fmt.Errorf("Unknown data type %X", dataType)
 }
 
-func ReadStringAtIndex(idx canopen.ObjectIndex, nodeID canopen.NodeID, bus *can.Bus) (string, error) {
+func ReadStringAtIndex(idx canopen.ObjectIndex, nodeID uint8, bus *can.Bus) (string, error) {
 	upload := sdo.Upload{
 		ObjectIndex:   idx,
 		RequestCobID:  uint16(SSDOClientToServer2) + uint16(nodeID),
@@ -90,7 +81,19 @@ func ReadStringAtIndex(idx canopen.ObjectIndex, nodeID canopen.NodeID, bus *can.
 		return "", err
 	}
 
-	return string(b[:]), nil
+	// b may contain invalid utf8 characters
+	return printableASCIIString(b), nil
+}
+
+func printableASCIIString(b []byte) string {
+    var ascii []byte
+    for _, b := range b {
+        if b >= 32 && b <= 126 {
+            ascii = append(ascii, b)
+        }
+    }
+    
+    return string(ascii)
 }
 
 func parseStringIndex(b []byte) canopen.ObjectIndex {
@@ -114,7 +117,7 @@ func parseCharacter(b []byte) (interface{}, error) {
 	switch dt {
 	case 0x32:
 		if value == 0 {
-			return "AUS", nil
+			return OutletStateOff, nil
 		}
 		return floatValue, nil
 	case 0x33:
@@ -143,7 +146,7 @@ func parseCharacter(b []byte) (interface{}, error) {
 }
 
 func parseUnitIndex(b []byte) canopen.ObjectIndex {
-    return canopen.NewObjectIndex(0x5002, uint8(b[5]))
+	return canopen.NewObjectIndex(0x5002, uint8(b[5]))
 }
 
 func parseFloat32(b []byte) float32 {

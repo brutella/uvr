@@ -6,7 +6,7 @@ import (
 	"github.com/brutella/canopen/sdo"
 )
 
-func WriteToIndex(idx canopen.ObjectIndex, b []byte, nodeID canopen.NodeID, bus *can.Bus) error {
+func WriteToIndex(idx canopen.ObjectIndex, b []byte, nodeID uint8, bus *can.Bus) error {
 	download := sdo.Download{
 		ObjectIndex:   idx,
 		RequestCobID:  uint16(SSDOClientToServer2) + uint16(nodeID),

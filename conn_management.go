@@ -7,41 +7,41 @@ import (
 	"time"
 )
 
-func Disconnect(serverID canopen.NodeID, clientID canopen.NodeID, bus *can.Bus) error {
-    b := []byte{
-			0x80 + byte(serverID),
-			0x01, 0x1F,
-			0x00,
-			byte(serverID),
-			byte(clientID),
-			0x80,
-			0x12,
+func Disconnect(serverID uint8, clientID uint8, bus *can.Bus) error {
+	b := []byte{
+		0x80 + byte(serverID),
+		0x01, 0x1F,
+		0x00,
+		byte(serverID),
+		byte(clientID),
+		0x80,
+		0x12,
 	}
-        
-    return sendConnManagementData(b, serverID, clientID, bus)
+
+	return sendConnManagementData(b, serverID, clientID, bus)
 }
 
-func Connect(serverID canopen.NodeID, clientID canopen.NodeID, bus *can.Bus) error {
-    b := []byte{
-			0x80 + byte(serverID),
-			0x00, 0x1F,
-			0x00,
-			byte(serverID),
-			byte(clientID),
-			0x80,
-			0x12,
+func Connect(serverID uint8, clientID uint8, bus *can.Bus) error {
+	b := []byte{
+		0x80 + byte(serverID),
+		0x00, 0x1F,
+		0x00,
+		byte(serverID),
+		byte(clientID),
+		0x80,
+		0x12,
 	}
-        
-    return sendConnManagementData(b, serverID, clientID, bus)
+
+	return sendConnManagementData(b, serverID, clientID, bus)
 }
 
-func sendConnManagementData(b []byte, serverID canopen.NodeID, clientID canopen.NodeID, bus *can.Bus) error {
+func sendConnManagementData(b []byte, serverID uint8, clientID uint8, bus *can.Bus) error {
 	c := &canopen.Client{bus, time.Second * 2}
 	frm := canopen.Frame{
 		CobID: uint16(MPDOClientServerConnManagement) + uint16(clientID),
-		Data: b,
+		Data:  b,
 	}
-    
+
 	respCobID := uint32(MPDOClientServerConnManagement) + uint32(serverID)
 	req := canopen.NewRequest(frm, respCobID)
 	resp, err := c.Do(req)
