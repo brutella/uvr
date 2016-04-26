@@ -86,14 +86,14 @@ func ReadStringAtIndex(idx canopen.ObjectIndex, nodeID uint8, bus *can.Bus) (str
 }
 
 func printableASCIIString(b []byte) string {
-    var ascii []byte
-    for _, b := range b {
-        if b >= 32 && b <= 126 {
-            ascii = append(ascii, b)
-        }
-    }
-    
-    return string(ascii)
+	var ascii []byte
+	for _, b := range b {
+		if b >= 32 && b <= 126 {
+			ascii = append(ascii, b)
+		}
+	}
+
+	return string(ascii)
 }
 
 func parseStringIndex(b []byte) canopen.ObjectIndex {
