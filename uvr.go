@@ -20,3 +20,15 @@ const (
 	SSDOClientToServer1 uint16 = 0x600
 	SSDOClientToServer2 uint16 = 0x640
 )
+
+const (
+	OutletModeAuto    = "AUTO"
+	OutletModeTimed   = "SCHZ"
+	OutletModeManuell = "HAND"
+
+	OutletStateOn  = "EIN"
+	OutletStateOff = "AUS"
+
+	DescriptionUnused = "-----"
+	OutletModeUnused  = ""
+)

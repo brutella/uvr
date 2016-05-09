@@ -34,14 +34,7 @@ func ReadFromIndex(idx canopen.ObjectIndex, nodeID uint8, bus *can.Bus) (interfa
 		return ReadStringAtIndex(index, nodeID, bus)
 
 	case 0x20: // Bit field
-		str := "Bits "
-		n := int(b[6] & 0xF)
-		for i := 0; i < n; i++ {
-			bit := b[0] >> uint(i)
-			str = str + fmt.Sprintf("%d", bit)
-		}
-
-		return str, nil
+		return fmt.Sprintf("Bits %b", b[0]), nil
 
 	case 0x30:
 		return parseCharacter(b)
@@ -159,7 +152,7 @@ func parseFloat32(b []byte) float32 {
 	// 5: subindex of unit object at index 0x5002
 	// 6: 0x4?
 	decimal := byte(b[4] & 0x1)
-	value := (uint32(b[3]) << 24) + (uint32(b[2]) << 16) + (uint32(b[1]) << 8) + uint32(b[0])
+	value := (int32(b[3]) << 24) + (int32(b[2]) << 16) + (int32(b[1]) << 8) + int32(b[0])
 	floatValue := float32(value)
 	if decimal > 0 {
 		floatValue = floatValue / (float32(decimal) * 10)

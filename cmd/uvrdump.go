@@ -53,6 +53,8 @@ func readOutlets(client *uvr.Client) {
 		uvr.NewOutlet(0x9),
 		uvr.NewOutlet(0xa),
 		uvr.NewOutlet(0xb),
+		uvr.NewOutlet(0xc),
+		uvr.NewOutlet(0xd),
 	}
 
 	log.Printf("+---------+-----------------+--------+------+")
@@ -81,6 +83,8 @@ func readInlets(client *uvr.Client) {
 		uvr.NewInlet(0xc),
 		uvr.NewInlet(0xd),
 		uvr.NewInlet(0xe),
+		uvr.NewInlet(0xf),
+		uvr.NewInlet(0x10),
 	}
 
 	log.Printf("+---------+-----------------+--------+------")

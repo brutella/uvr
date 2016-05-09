@@ -4,15 +4,6 @@ import (
 	"github.com/brutella/canopen"
 )
 
-const (
-	OutletModeAuto    = "AUTO"
-	OutletModeTimed   = "SCHZ"
-	OutletModeManuell = "HAND"
-
-	OutletStateOn  = "EIN"
-	OutletStateOff = "AUS"
-)
-
 type Outlet struct {
 	Description canopen.ObjectIndex
 	StartDelay  canopen.ObjectIndex
