@@ -39,15 +39,10 @@ func ReadFromIndex(idx canopen.ObjectIndex, nodeID uint8, bus *can.Bus) (interfa
 	case 0x30:
 		return parseCharacter(b)
 
-	case 0x40: // documentation says integer but actually it's a 16-bit float
-
-		// Override bytes for 16-bit float
-		b[2] = 0
-		b[3] = 0
-		fallthrough
-	case 0x50: // documentation says long integer but actually it's a 32-bit float
-		value := parseFloat32(b)
-		return value, nil
+	case 0x40: // 16-bit integer converted to a 32-bit float
+		return parseInt16(b), nil
+	case 0x50: // 32-bit integer converted to a 32-bit float
+		return parseInt32(b), nil
 
 		// index := parseUnitIndex(b)
 		// str, err := ReadStringAtIndex(index, nodeID, bus)
@@ -142,17 +137,38 @@ func parseUnitIndex(b []byte) canopen.ObjectIndex {
 	return canopen.NewObjectIndex(0x5002, uint8(b[5]))
 }
 
-func parseFloat32(b []byte) float32 {
+// parseInt32 parses a 32-bit integer and converts it to a 32-bit float
+func parseInt32(b []byte) float32 {
 	// Bytes
-	// 0: first 8 bits of float32
-	// 1: second 8 bits of float32
-	// 2: third 8 bits of float32
-	// 3: fourth 8 bits of float32
+	// 0: first 8 bits of int32
+	// 1: second 8 bits of int32
+	// 2: third 8 bits of int32
+	// 3: fourth 8 bits of int32
 	// 4: LSD = number of decimal places; MSB = ignored for now
 	// 5: subindex of unit object at index 0x5002
-	// 6: 0x4?
+	// 6: ?
 	decimal := byte(b[4] & 0x1)
 	value := (int32(b[3]) << 24) + (int32(b[2]) << 16) + (int32(b[1]) << 8) + int32(b[0])
+	floatValue := float32(value)
+	if decimal > 0 {
+		floatValue = floatValue / (float32(decimal) * 10)
+	}
+
+	return floatValue
+}
+
+// parseInt16 parses a 16-bit integer and converts it to a 32-bit float
+func parseInt16(b []byte) float32 {
+	// Bytes
+	// 0: first 8 bits of int16
+	// 1: second 8 bits of int16
+	// 2: ?
+	// 3: ?
+	// 4: LSD = number of decimal places; MSB = ignored for now
+	// 5: subindex of unit object at index 0x5002
+	// 6: ?
+	decimal := byte(b[4] & 0x1)
+	value := (int16(b[1]) << 8) + int16(b[0])
 	floatValue := float32(value)
 	if decimal > 0 {
 		floatValue = floatValue / (float32(decimal) * 10)
