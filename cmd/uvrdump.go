@@ -106,7 +106,7 @@ func main() {
 	var (
 		clientId = flag.Int("client_id", 16, "id of the client; range from [1...254]")
 		serverId = flag.Int("server_id", 1, "id of the server to which the client connects to: range from [1...254]")
-		iface    = flag.String("iface", "can0", "name of the can network interface")
+		iface    = flag.String("if", "can0", "name of the can network interface")
 	)
 
 	flag.Parse()
