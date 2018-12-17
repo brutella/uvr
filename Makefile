@@ -20,7 +20,7 @@ test:
 
 clean:
 	$(GOCLEAN)
-	rm -rf $(BINARY_NAME)
+	rm -rf $(BUILD_DIR)
 
 package-uvrdump: build-uvrdump
 	tar -cvzf $(PACKAGE_UVRDUMP).tar.gz -C $(BUILD_DIR) $(PACKAGE_UVRDUMP)
