@@ -1,7 +1,9 @@
 package uvr
 
 import (
+	"fmt"
 	"github.com/brutella/canopen"
+	"strings"
 )
 
 type Outlet struct {
@@ -22,4 +24,17 @@ func NewOutlet(subIndex uint8) Outlet {
 		State:       canopen.NewObjectIndex(0x20aa, subIndex),
 		SpeedStage:  canopen.NewObjectIndex(0x20ab, subIndex),
 	}
+}
+
+func StringToBool(str string) (bool, error) {
+	switch strings.TrimSpace(str) {
+	case OutletStateOn:
+		return true, nil
+	case OutletStateOff:
+		return false, nil
+	default:
+		break
+	}
+
+	return false, fmt.Errorf("Unknown string value %v (%X)", str, str)
 }
