@@ -4,9 +4,11 @@ GOCLEAN=$(GOCMD) clean
 GOTEST=$(GOCMD) test
 GOGET=$(GOCMD) get
 
+VERSION=$(shell git describe --exact-match --tags 2>/dev/null)
+
 BUILD_DIR=build
 
-PACKAGE_UVRDUMP=uvrdumpdump-$(VERSION)_linux_armhf
+PACKAGE_UVRDUMP=uvrdump-$(VERSION)_linux_armhf
 PACKAGE_UVRINFLUX=uvrinflux-$(VERSION)_linux_armhf
 
 all: test build
