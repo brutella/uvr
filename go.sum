@@ -1,0 +1,6 @@
+github.com/brutella/can v0.0.1 h1:Rz+2Zuje3NT79daon8wPN9+VphH3/kl1DP8Dhf/k1NI=
+github.com/brutella/can v0.0.1/go.mod h1:NYDxbQito3w4+4DcjWs/fpQ3xyaFdpXw/KYqtZFU98k=
+github.com/brutella/canopen v0.0.0-20180117072235-10da70c9b89d h1:yTQNc5RDXle9x9gHkvrL2Tmwaq3j2Lqjb5Lkdemz4Io=
+github.com/brutella/canopen v0.0.0-20180117072235-10da70c9b89d/go.mod h1:5TBWwAR7mMetYpceRf03TCwVPk0od+XT1izuTGLagrI=
+golang.org/x/sys v0.0.0-20181213200352-4d1cda033e06 h1:0oC8rFnE+74kEmuHZ46F6KHsMr5Gx2gUQPuNz28iQZM=
+golang.org/x/sys v0.0.0-20181213200352-4d1cda033e06/go.mod h1:STP8DvDyc/dI5b8T5hshtkjS+E42TnysNCUPdjciGhY=
