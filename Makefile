@@ -11,6 +11,8 @@ BUILD_DIR=build
 PACKAGE_UVRDUMP=uvrdump-$(VERSION)_linux_armhf
 PACKAGE_UVRINFLUX=uvrinflux-$(VERSION)_linux_armhf
 
+unexport GOPATH
+
 all: test build
 build:
 	$(GOBUILD) -o $(BUILD_DIR)/$(BINARY_NAME) -i $(BUILD_SRC)
