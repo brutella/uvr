@@ -114,7 +114,7 @@ func parseCharacter(b []byte) (interface{}, error) {
 		if value <= 25 {
 			return string(0x41 + value), nil
 		} else {
-			return nil, fmt.Errorf("Invalid value %d for data type", value, dt)
+			return nil, fmt.Errorf("Invalid value %d for data type %d", value, dt)
 		}
 	case 0x35:
 		return value * 5, nil
