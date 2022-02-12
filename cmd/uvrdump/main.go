@@ -1,11 +1,9 @@
 package main
 
 import (
-	"fmt"
 	"flag"
 	"github.com/brutella/can"
 	"github.com/brutella/uvr"
-	"uvr"
 	"log"
 )
 
