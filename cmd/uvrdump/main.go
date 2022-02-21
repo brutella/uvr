@@ -23,6 +23,24 @@ func readOutlet(outlet uvr.Outlet, client *uvr.Client) (descr string, mode strin
 	return
 }
 
+func readAnalogOutlet(analogoutlet uvr.AnalogOutlet, client *uvr.Client) (descr string, mode string, val float32) {
+	if value, err := client.Read(analogoutlet.Description); err == nil {
+		descr = value.(string)
+	}
+
+	if value, err := client.Read(analogoutlet.Mode); err == nil {
+		mode = value.(string)
+	}
+
+	if value, err := client.Read(analogoutlet.Value); err == nil {
+		if float, ok := value.(float32); ok == true {
+			val = float
+		}
+	}
+
+	return
+}
+
 func readInlet(inlet uvr.Inlet, client *uvr.Client) (descr string, state string, val float32) {
 	if value, err := client.Read(inlet.Description); err == nil {
 		descr = value.(string)
@@ -64,6 +82,22 @@ func readOutlets(client *uvr.Client) {
 	for index, outlet := range outlets {
 		descr, mode, val := readOutlet(outlet, client)
 		log.Printf("| %-7d | %-15s | %-6s | %-4s |", index+1, descr, mode, val)
+	}
+	log.Printf("+---------+-----------------+--------+------+")
+}
+
+func readAnalogOutlets(client *uvr.Client) {
+	analogoutlets := []uvr.AnalogOutlet{
+		uvr.NewAnalogOutlet(0xf),
+		uvr.NewAnalogOutlet(0x10),
+	}
+
+	log.Printf("+---------+-----------------+--------+------+")
+	log.Printf("| Ausgang | Bezeichnung     | Mode   | Wert |")
+	log.Printf("+---------+-----------------+--------+------+")
+	for index, analogoutlet := range analogoutlets {
+		descr, mode, val := readAnalogOutlet(analogoutlet, client)
+		log.Printf("| %-7d | %-15s | %-6s | %.1f |", index+1, descr, mode, val)
 	}
 	log.Printf("+---------+-----------------+--------+------+")
 }
@@ -129,6 +163,7 @@ func main() {
 
 	readInlets(c)
 	readOutlets(c)
+	readAnalogOutlets(c)
 
 	c.Disconnect(uvrID)
 	bus.Disconnect()
